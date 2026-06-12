@@ -1,0 +1,12 @@
+(function(){
+function E(id){return OS.el(id)}function D(){return OS.data}function esc(x){return OS.esc(x)}function n(x){return OS.num(x)}function today(){return OS.today}
+window.S21={};
+S21.assess=function(){return window.BRAIN?BRAIN.makeAssessment(D(),OS):{score:80,warnings:[],questions:[],recipe:[]}};
+S21.metric=function(label,value,sub){return '<div class="commandCard"><b>'+esc(value)+'</b><span>'+esc(label)+'<br>'+esc(sub||'')+'</span></div>'};
+S21.recent=function(k){return (D().sessions||[]).slice().sort(function(a,b){return b.date.localeCompare(a.date)}).slice(0,k)};
+S21.warningHtml=function(st,a){var out=[];(st.w||[]).forEach(function(x){out.push('<div class="red">'+esc(x)+'</div>')});(a.warnings||[]).forEach(function(x){out.push('<div class="yellow">'+esc(x)+'</div>')});if(!out.length)out.push('<div class="green">System grün: Plan möglich, spezifische Reize weiter loggen.</div>');return out.join('')};
+S21.nextBest=function(st,a,p){if(st.score<45||a.score<55)return 'Heute schützen: Pause, Mobility oder Technik ohne Fingerlast.';if(st.score<70||a.score<75)return 'Heute kontrollieren: Technik/Submax, keine riskanten Reizkombinationen.';if(p.id==='power')return 'Power nur frisch: wenige harte Züge, lange Pausen.';if(p.id==='performance')return 'Performance möglich: Zielboulder nur mit hoher Qualität.';if(p.id==='strength')return 'Strength sauber: harte Züge, kein Projektkrieg.';return 'Plan ausführbar: Qualität und Reizprofil sauber loggen.'};
+S21.chart=function(vals,max){max=max||Math.max(1,...vals);return '<div style="display:flex;align-items:end;gap:6px;height:120px">'+vals.map(function(v,i){var h=Math.max(6,Math.round(v/max*110));return '<div style="flex:1;text-align:center"><div style="height:'+h+'px;background:linear-gradient(180deg,#6f98ff,#2455e6);border-radius:9px 9px 2px 2px"></div><small class="muted">-'+(i+1)+'w</small></div>'}).join('')+'</div>'};
+S21.installDock=function(){if(document.getElementById('bottomDock'))return;var d=document.createElement('div');d.id='bottomDock';d.className='bottomDock';d.innerHTML='<button onclick="OS.show(\'dash\')"><b>⌂</b>Home</button><button onclick="OS.show(\'today\')"><b>✓</b>Heute</button><button onclick="OS.show(\'live\')"><b>●</b>Live</button><button onclick="OS.show(\'calendar\')"><b>◴</b>Plan</button><button onclick="OS.show(\'reports\')"><b>↟</b>Report</button>';document.body.appendChild(d)};
+S21.installDock();
+})();
