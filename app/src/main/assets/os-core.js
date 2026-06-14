@@ -1,7 +1,7 @@
 window.OS=(function(){
 var today=new Date().toISOString().slice(0,10);
-var tabs=[['dash','Dashboard'],['today','Heute'],['calendar','Kalender'],['live','Live'],['planner','Session-Builder'],['boulders','BoulderDB'],['year','52 Wochen'],['blocks','Blöcke'],['log','Log'],['finger','Finger/Kraft'],['tech','Techniklabor'],['moon','MoonBoard'],['tests','Tests'],['reports','Reports'],['rehab','Return-to-Load'],['analysis','Analyse'],['data','Daten']];
-function base(){return{start:today,week:1,sessions:[],planned:[],boulders:[],attempts:[],moon:[],tests:[],goals:[['5er zuverlässiger','75-85% in einer Session','aktiv'],['Fingergesund bleiben','keine Ringbandreaktion','aktiv'],['Mehr über Füße ziehen','weniger Cut-loose','aktiv']],timer:180}}
+var tabs=[['dash','Dashboard'],['today','Heute'],['live','Live'],['planner','Session-Builder'],['year','52 Wochen'],['blocks','Blöcke'],['log','Log'],['finger','Finger/Kraft'],['tech','Techniklabor'],['tests','Tests'],['reports','Reports'],['analysis','Analyse'],['data','Daten']];
+function base(){return{start:today,week:1,sessions:[],planned:[],attempts:[],tests:[],goals:[['5er zuverlässiger','75-85% in einer Session','aktiv'],['Fingergesund bleiben','keine Ringbandreaktion','aktiv'],['Mehr über Füße ziehen','weniger Cut-loose','aktiv']],timer:180}}
 var data;try{data=JSON.parse(localStorage.boulder_coach_os||'null')||base()}catch(e){data=base()}
 function save(){localStorage.boulder_coach_os=JSON.stringify(data)}
 function el(id){return document.getElementById(id)}
@@ -17,8 +17,8 @@ function cls(s){return s<45?'bad':s<70?'warn':'good'}
 function bar(v,m){m=m||100;var p=Math.max(0,Math.min(100,v/m*100));return '<div class="bar"><span style="width:'+p+'%"></span></div>'}
 function nav(){el('nav').innerHTML=tabs.map(function(t){return '<button id="b_'+t[0]+'" onclick="OS.show(\''+t[0]+'\')">'+t[1]+'</button>'}).join('')}
 function show(id){tabs.forEach(function(t){var p=el('pg_'+t[0]),b=el('b_'+t[0]);if(p)p.classList.toggle('on',t[0]==id);if(b)b.classList.toggle('on',t[0]==id)});render()}
-function safe(id,fn){try{if(typeof fn==='function'){fn()}else{el(id).innerHTML='<div class="card"><h2>Modul noch nicht geladen</h2></div>'}}catch(e){el(id).innerHTML='<div class="error"><b>Modulfehler</b><br>'+esc(e.message)+'</div>'}}
-function render(){safe('pg_dash',UI.dash);safe('pg_today',UI.today);safe('pg_calendar',UI.calendar);safe('pg_live',UI.live);safe('pg_planner',UI.planner);safe('pg_boulders',UI.boulders);safe('pg_year',UI.year);safe('pg_blocks',UI.blocks);safe('pg_log',UI.log);safe('pg_finger',UI.finger);safe('pg_tech',UI.tech);safe('pg_moon',UI.moon);safe('pg_tests',UI.tests);safe('pg_reports',UI.reports);safe('pg_rehab',UI.rehab);safe('pg_analysis',UI.analysis);safe('pg_data',UI.dataPage)}
+function safe(id,fn){var e=el(id);if(!e)return;try{if(typeof fn==='function'){fn()}else{e.innerHTML='<div class="card"><h2>Modul noch nicht geladen</h2></div>'}}catch(err){e.innerHTML='<div class="error"><b>Modulfehler</b><br>'+esc(err.message)+'</div>'}}
+function render(){safe('pg_dash',UI.dash);safe('pg_today',UI.today);safe('pg_live',UI.live);safe('pg_planner',UI.planner);safe('pg_year',UI.year);safe('pg_blocks',UI.blocks);safe('pg_log',UI.log);safe('pg_finger',UI.finger);safe('pg_tech',UI.tech);safe('pg_tests',UI.tests);safe('pg_reports',UI.reports);safe('pg_analysis',UI.analysis);safe('pg_data',UI.dataPage)}
 function start(){nav();tabs.forEach(function(t,i){var p=el('pg_'+t[0]);if(p)p.classList.toggle('on',i==0)});render()}
 return{today:today,tabs:tabs,data:data,save:save,el:el,esc:esc,num:num,diff:diff,phase:phase,block:block,status:status,cls:cls,bar:bar,show:show,render:render,start:start};
 })();
